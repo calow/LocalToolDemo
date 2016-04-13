@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<meta name="HandheldFriendly" content="true"/>
+		<meta name="MobileOptimized" content="320"/>
+		<title>index-page</title>
+		<script type="text/javascript" src="./js/common.js"></script>
+		<script type="text/javascript" src="./js/controller.js"></script>
+		<script type="text/javascript" src="./js/mui.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			//运行工具
+			function Test(type){
+				if(type == 1){//运行有页面终端工具
+					LocalTestPage();
+				}else{//运行无页面终端工具
+					LocalTestNoPage();
+				}
+			}
+			
+			//获取输入框数据，并打开blank页面，在blank页面中请求运行工具
+			function LocalTestPage() {
+				var toolName = document.getElementById('toolName').value;
+				var url = 'test_blank.html';
+				var id = 'id_' + toolName;
+				var wv = plus.webview.create(url, id, {
+						top: '0px', //mui标题栏默认高度为48px
+						bottom: '0px', //默认为0px，可不定义
+						scalable: true
+				}, {
+						toolName: toolName,
+						runType: "1"
+				});
+				wv.show();
+			}
+			
+			//弹出输入框，让用户输入参数
+			function LocalTestNoPage(){
+				mui('.mui-popover').popover('toggle');
+				
+			}
+			
+			//点击输入框的确定按钮后，请求运行工具
+			function Ensure(){
+				mui('.mui-popover').popover('toggle');
+				var toolParams = document.getElementById('toolParams').value;
+				var json = {
+				 	"runType": "2",
+				    "toolParams" : toolParams
+				};
+				plus.controller.Test(JSON.stringify(json), function(result){
+					alert("code = " + result.code + "--- 运行结果 ： " + result.content);
+				},function(result){
+					alert("code = " + result.code + "--- 错误信息 ： " + result.content);
+				});
+			}
+			
+			//点击取消隐藏弹出框
+			function Cancel(){
+				mui('.mui-popover').popover('toggle');
+			}
+			
+			//下拉框选中事件时触发此方法，显示和隐藏Div
+			function _select(){
+				var select = document.getElementById('selectID');
+				var value = select.value;
+				var withPage = document.getElementById('withPageDiv');
+				var withoutPage = document.getElementById('withoutPageDiv');
+				if(value == "1"){
+					withPage.style.display = "block";
+					withoutPage.style.display = "none";
+				}else{
+					withoutPage.style.display = "block";
+					withPage.style.display = "none";
+				}
+			}
+		</script>
+		<link rel="stylesheet" href="./css/common.css" type="text/css" charset="utf-8"/>
+		<link rel="stylesheet" href="./css/mui.css" type="text/css" charset="utf-8"/>
+	</head>
+	<body>
+		<header>
+			<div class="nvbt" onclick="back();"><div class="iback"></div></div>
+			<div class="nvtt">index</div>
+		</header>
+		<div id="dcontent" class="dcontent">
+			<br/>
+			<label>选择工具类型</label>
+			<select id="selectID" onchange="_select()">
+		        <option value="1">有页面终端工具</option>
+		        <option value="2">无页面终端工具</option>
+		    </select>
+			<br/>
+			<div id="withPageDiv">
+				工具名：<input type="text" class="mui-input-clear" placeholder="工具名" name="toolName" id="toolName" value="Test">
+				<div class="button" onclick="Test(1)">有页面终端工具测试</div>
+			</div>
+			<div id="withoutPageDiv" style="display:none">
+				<div class="button" onclick="Test(2)">无页面终端工具测试</div>
+			</div>
+		</div>
+		<div id="popover" class="mui-popover poperDialog" >
+			工具参数：<input type="text" class="mui-input-clear" placeholder="输入无页面工具参数(比如action=sub,count1=12,count2=5)" name="toolParams" id="toolParams" value="action=sub,count1=12,count2=5">
+			<div class="button" onclick="Ensure()">确定</div>
+			<div class="button" onclick="Cancel()">取消</div>
+		</div>
+	</body>
+</html>

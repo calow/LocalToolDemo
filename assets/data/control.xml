@@ -1,0 +1,10 @@
+<hbuilder version="1.9.9.22134" >
+
+    <apps>
+
+        <app
+            appid="WeToBand"
+            appver="0.1.0" />
+    </apps>
+
+</hbuilder>

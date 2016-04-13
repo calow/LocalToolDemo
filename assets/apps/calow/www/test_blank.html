@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<meta name="HandheldFriendly" content="true"/>
+		<meta name="MobileOptimized" content="320"/>
+		<title>index-page</title>
+		<script type="text/javascript" src="./js/common.js"></script>
+		<script type="text/javascript" src="./js/controller.js"></script>
+		<script type="text/javascript" src="./js/mui.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			mui.plusReady(function() {
+				//获取从上一webview中传过来的参数
+				webview = plus.webview.currentWebview();
+				var toolName = webview.toolName;
+				var runType = webview.runType;
+				var json = {
+					 "toolName": toolName,
+					 "runType": runType
+				};
+				//请求运行有页面工具
+				plus.controller.Test(JSON.stringify(json), function(result){
+					alert("code = " + result.code + "--- 运行结果 ： " + result.content);
+				},function(result){
+					alert("code = " + result.code + "--- 错误信息 ： " + result.content);
+				});
+			});
+			
+		</script>
+		<link rel="stylesheet" href="./css/common.css" type="text/css" charset="utf-8"/>
+		<link rel="stylesheet" href="./css/mui.css" type="text/css" charset="utf-8"/>
+	</head>
+	<body>
+		<header>
+			<div class="nvbt" onclick="back();"><div class="iback"></div></div>
+			<div class="nvtt">工具运行页面</div>
+		</header>
+		<div id="dcontent" class="dcontent">
+			
+		</div>
+	</body>
+</html>
